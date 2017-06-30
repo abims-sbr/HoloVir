@@ -61,10 +61,10 @@ for FILE in $DATADIR/* ; do
   BASE=$(basename $FILE)
   mkdir -p $CHUNKSDIR/$BASE $LOGDIR/$BASE
   zcat $FILE | $SCRIPTS/split_seqfile.py $CHUNKSDIR/$BASE/chunk $CHUNKSIZE
-  MAX=$(ls -v $CHUNKSDIR/$BASE/chunk.* | tail -1 | grep -o "[0-9]*$")
-  jobID=$(sbatch -a 0-$MAX -J ${JOBNAMEBASE}_blast -o $LOGDIR/$BASE/blastp-%j.out -e $LOGDIR/$BASE/blastp-%j.err $SCRIPTS/blastp_swissprot.sh $CHUNKSDIR/$BASE $BLASTDB $BLASTDBTMPDIR $LOCKDIR | grep -o "[0-9]*$")
-  sbatch --dependency=afterok:$jobID -J ${JOBNAMEBASE}_concat -o $LOGDIR/$BASE/checkconcat-%j.out -e $LOGDIR/$BASE/checkconcat-%j.err $SCRIPTS/checkconcat_swissprot.sh $CHUNKSDIR/$BASE $LOGDIR/$BASE $RESULTDIR $SCRIPTS $SPROTKW $FILE 
+  # SGE do not accept jobarray id starting from 0.
+  MAX=$(($(ls -v $CHUNKSDIR/$BASE/chunk.* | tail -1 | grep -o "[0-9]*$") + 1))
+  jobID=$(qsub -t 1-$MAX -N ${JOBNAMEBASE}_blast -o $LOGDIR/$BASE/'blastp-${JOB_ID}.out' -e $LOGDIR/$BASE/'blastp-${JOB_ID}.err' $SCRIPTS/blastp_swissprot.sh $CHUNKSDIR/$BASE $BLASTDB $BLASTDBTMPDIR $LOCKDIR | grep -o "[0-9]*$")
+  qsub -hold_jid_ad $jobID -N ${JOBNAMEBASE}_concat -o $LOGDIR/$BASE/'checkconcat-${JOB_ID}.out' -e $LOGDIR/$BASE/'checkconcat-${JOB_ID}.err' $SCRIPTS/checkconcat_swissprot.sh $CHUNKSDIR/$BASE $LOGDIR/$BASE $RESULTDIR $SCRIPTS $SPROTKW $FILE
 done
 
 popd > /dev/null
-

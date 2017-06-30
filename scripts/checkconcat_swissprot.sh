@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=1000
-#SBATCH --nice=5000
+# #SBATCH --cpus-per-task=1
+#$ -l mem_free=1G
+# #SBATCH --nice=5000
 
 # #SBATCH --partition=mcore
 # #SBATCH --output=log/checkconcat-%j.out
@@ -44,5 +44,3 @@ rmdir $(readlink -f $(dirname $RESULTDIR)/locks) 2>/dev/null && rm -f $(dirname 
 
 # count keywords
 $SCRIPTS/count_keywords.py $RESULTDIR/$OUTFILE $SPROTKW $RESULTDIR/${OUTFILE}.keywords $FASTAFILE
-
-

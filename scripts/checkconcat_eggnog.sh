@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=5000
-#SBATCH --nice=5000
+# #SBATCH --cpus-per-task=1
+#$ -l mem_free=5G
+# #SBATCH --nice=5000
 
 # #SBATCH --partition=mcore
 # #SBATCH --output=log/checkconcat-%j.out
@@ -45,4 +45,3 @@ rmdir $(readlink -f $(dirname $RESULTDIR)/locks) 2>/dev/null && rm -f $(dirname 
 
 # count function labels
 $SCRIPTS/count_functionlabels_magnitude.py $RESULTDIR/$OUTFILE $NOG_MEMBERS $FUNCCATEGORIES $FASTAFILE > $RESULTDIR/${OUTFILE}.funclabelcount.txt
-

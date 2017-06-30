@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-#SBATCH --cpus-per-task=2
-#SBATCH --mem=6000
-#SBATCH --nice=5000
+# #SBATCH --cpus-per-task=2
+#$ -l mem_free=6G
+# #SBATCH --nice=5000
 
 # #SBATCH --output=log/blastp-%j.out
 # #SBATCH --error=log/blastp-%j.err
@@ -36,6 +36,6 @@ if [ $FILES2TRANSFER -gt 0 ] ; then
  fi
 fi
 
-blastp -task blastp -num_threads 2 -db $BLASTTMPDIR/$(basename $BLASTDB) -query $CHUNKSDIR/chunk.${SLURM_ARRAY_TASK_ID} -evalue 1e-10 -outfmt 6 -max_target_seqs 1 | gzip > $CHUNKSDIR/chunk.${SLURM_ARRAY_TASK_ID}.blast.gz
+#blastp -task blastp -num_threads 2 -db $BLASTTMPDIR/$(basename $BLASTDB) -query $CHUNKSDIR/chunk.${SLURM_ARRAY_TASK_ID} -evalue 1e-10 -outfmt 6 -max_target_seqs 1 | gzip > $CHUNKSDIR/chunk.${SLURM_ARRAY_TASK_ID}.blast.gz
+blastp -task blastp -db $BLASTTMPDIR/$(basename $BLASTDB) -query $CHUNKSDIR/chunk.${SLURM_ARRAY_TASK_ID} -evalue 1e-10 -outfmt 6 -max_target_seqs 1 | gzip > $CHUNKSDIR/chunk.${SLURM_ARRAY_TASK_ID}.blast.gz
 #-outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen salltitles'
-

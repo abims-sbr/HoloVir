@@ -29,15 +29,14 @@ for DATASETF1 in $PP_DATADIR/*R1*; do
 
   BASE=$(printf "%s\n%s\n" $DATASETF1 $DATASETF2 | sed -e 'N;s/^\(.*\).*\n\1.*$/\1/')
   BASE=${BASE%R}; BASE=${BASE%_}; BASE=${BASE%-};
-  BASE=$(basename $BASE | cut -f 1 -d .) 
+  BASE=$(basename $BASE | cut -f 1 -d .)
   echo "base is $BASE"
 
 
-   gunzip -c $DATASETF1 >$DATADIR/$BASE.R1.fastq 
+   gunzip -c $DATASETF1 >$DATADIR/$BASE.R1.fastq
    gunzip -c $DATASETF2 >$DATADIR/$BASE.R2.fastq
    #ho "pwd is $PWD"
 
-  sbatch $SCRIPTS/ray.sh $BASE $AS_DIR
-  #sbatch $SCRIPTS/trinity.sh $BASE $AS_DIR
+  qsub $SCRIPTS/ray.sh $BASE $AS_DIR
+  #qsub $SCRIPTS/trinity.sh $BASE $AS_DIR
 done
-

@@ -11,7 +11,7 @@ mkdir -p $GP_DIR/data $GP_DIR/results
 echo "revised data directory is $GP_DIR/data"
 echo "revised data directory is $GP_DIR/results"
 #for AS_DATASET in $GP_DATADIR/*; do
-#  gunzip $AS_DATASET  
+#  gunzip $AS_DATASET
 #done
 gunzip $GP_DATADIR/*
 ls -la $GP_DATADIR/
@@ -31,9 +31,9 @@ for DATASET in $GP_DIR/data/*; do
   cat $GP_DIR/results/$BASE.contigs.mga2.faa | sed 's/>contig_/>/g' >$GP_DIR/results/$BASE.contigs.mga.faa
   rm $GP_DIR/results/$BASE.contigs.mga2.fa
   rm $GP_DIR/results/$BASE.contigs.mga2.faa
-  gunzip -c $PP_DATADIR/$BASE*R1*f*q.gz >$GP_DIR/data/$BASE.R1.fastq 
+  gunzip -c $PP_DATADIR/$BASE*R1*f*q.gz >$GP_DIR/data/$BASE.R1.fastq
   gunzip -c $PP_DATADIR/$BASE*R2*f*q.gz >$GP_DIR/data/$BASE.R2.fastq
 #ln -s $PWD/data/$DATASET.R1.fastq $PWD/$CURRENTDIR/04geneprediction/data/$BASE.R1.fastq
 #ln -s $PWD/data/$DATASET.R2.fastq $PWD/data/$BASE.R2.fastq
-sbatch $SCRIPTS/coveragemapping.sh $GP_DIR/data/$BASE.*.contigs.fasta $GP_DIR/data/$BASE.R1.fastq $GP_DIR/data/$BASE.R2.fastq $BASE $GP_DIR $GP_DIR/results/$BASE.contigs.mga.fa
+qsub $SCRIPTS/coveragemapping.sh $GP_DIR/data/$BASE.*.contigs.fasta $GP_DIR/data/$BASE.R1.fastq $GP_DIR/data/$BASE.R2.fastq $BASE $GP_DIR $GP_DIR/results/$BASE.contigs.mga.fa
 done

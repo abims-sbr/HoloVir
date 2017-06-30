@@ -28,7 +28,7 @@ for SAMPLEDIR in $(ls -d $MR_DATADIR/*); do
   ln -s $SAMPLEDIR/${SAMPLE}.fasta.gz
 done
 popd > /dev/null
-[ "$(ls -A $DATADIR)" ] || { echo "No data files found. Stop."; exit 1; } 
+[ "$(ls -A $DATADIR)" ] || { echo "No data files found. Stop."; exit 1; }
 
 # check database
 [[ ! -e $MARKERDB && ! -e ${MARKERDB}.gz ]] && { echo 'Marker db missing. Stop.'; exit 1; }
@@ -43,10 +43,10 @@ for FILE in $DATADIR/* ; do
   BASE=$(basename $FILE)
   mkdir -p $CHUNKSDIR/$BASE $LOGDIR/$BASE
   zcat $FILE | $SCRIPTS/split_seqfile.py $CHUNKSDIR/$BASE/chunk $MR_CHUNKSIZE
-  MAX=$(ls -v $CHUNKSDIR/$BASE/chunk.* | tail -1 | grep -o "[0-9]*$")
-  jobID=$(sbatch -a 0-$MAX -J Holovir_MR_blast -o $LOGDIR/$BASE/blastx-%j.out -e $LOGDIR/$BASE/blastx-%j.err $SCRIPTS/blastx.sh $CHUNKSDIR/$BASE $MARKERDB $BLASTDBTMPDIR $LOCKDIR | grep -o "[0-9]*$")
-  sbatch --dependency=afterok:$jobID -J Holovir_MR_concat -o $LOGDIR/$BASE/checkconcat-%j.out -e $LOGDIR/$BASE/checkconcat-%j.err $SCRIPTS/checkconcat.sh $CHUNKSDIR/$BASE $LOGDIR/$BASE $RESULTDIR
+  # SGE do not accept jobarray id starting from 0.
+  MAX=$(($(ls -v $CHUNKSDIR/$BASE/chunk.* | tail -1 | grep -o "[0-9]*$") + 1))
+  jobID=$(qsub -t 1-$MAX -N Holovir_MR_blast -o $LOGDIR/$BASE/'blastx-${JOB_ID}.out' -e $LOGDIR/$BASE/'blastx-${JOB_ID}.err' $SCRIPTS/blastx.sh $CHUNKSDIR/$BASE $MARKERDB $BLASTDBTMPDIR $LOCKDIR | grep -o "[0-9]*$")
+  qsub -hold_jid_ad $jobID -J Holovir_MR_concat -o $LOGDIR/$BASE/'checkconcat-${JOB_ID}.out' -e $LOGDIR/$BASE/'checkconcat-${JOB_ID}.err' $SCRIPTS/checkconcat.sh $CHUNKSDIR/$BASE $LOGDIR/$BASE $RESULTDIR
 done
 
 popd > /dev/null
-

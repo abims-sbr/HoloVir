@@ -28,7 +28,6 @@ for F1 in data/*R1*; do
 
   mkdir -p $LOGDIR/$BASE $RESULTDIR/$BASE
 
-  sbatch -J Holovir_preprocess -o $LOGDIR/$BASE/preprocess-%j.out -e $LOGDIR/$BASE/preprocess-%j.err scripts/preprocess.sh $F1 $F2 $BASE $RESULTDIR $SCRIPTS
+  qsub -N Holovir_preprocess -o $LOGDIR/$BASE/'preprocess-${JOB_ID}.out' -e $LOGDIR/$BASE/'preprocess-${JOB_ID}.err' scripts/preprocess.sh $F1 $F2 $BASE $RESULTDIR $SCRIPTS
 
 done
-

@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=5000
-#SBATCH --nice=1000
+# #SBATCH --cpus-per-task=1
+#$ -l mem_free=5G
+# #SBATCH --nice=1000
 # #SBATCH --partition=mcore
 
 # #SBATCH --output=log/preprocess-%j.out

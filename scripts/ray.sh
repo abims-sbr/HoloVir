@@ -1,10 +1,10 @@
 #!/bin/bash
 #
-#SBATCH --job-name=ray
+#$ -N ray
 #SBATCH --ntasks=16
-#SBATCH --output=../log/ray-%j.out 
-#SBATCH --error=../log/ray-%j.err
-#SBATCH --mem=80000
+#$ -o ../log/ray-${JOB_ID}.out
+#$ -e ../log/ray-${JOB_ID}.err
+#$ -l mem_free=80G
 #SBATCH --partition=mcore
 
 module load ray

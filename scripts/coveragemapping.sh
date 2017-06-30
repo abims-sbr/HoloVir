@@ -1,10 +1,10 @@
 #!/bin/bash
 #
-#SBATCH --job-name=contigmapping
-#SBATCH --cpus-per-task=2
-#SBATCH --output=../log/contigmapping-%j.out
-#SBATCH --error=../log/contigmapping-%j.err
-#SBATCH --mem=2000
+#$ -N contigmapping
+# #SBATCH --cpus-per-task=2
+#$ -o ../log/contigmapping-${JOB_ID}.out
+#$ -e ../log/contigmapping-${JOB_ID}.err
+#$ -l mem_free=2G
 . configfile.txt
 SCRIPTS=$(readlink -e $SCRIPTS || { echo "scripts directory not found. Stop"; exit 1;})
 CONTIGS=$1
@@ -57,5 +57,3 @@ gzip $GENES
 gzip ${GENES}a
 gzip $OUTPUTDIR/data/$OUTPUTPREFIX.*.fastq
 gzip $OUTPUTDIR/data/$OUTPUTPREFIX.*.contigs.fasta
-
-

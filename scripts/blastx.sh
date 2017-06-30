@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=3000
-#SBATCH --nice=5000
+# #SBATCH --cpus-per-task=1
+#$ -l mem_free=3G
+# #SBATCH --nice=5000
 # #SBATCH --partition=mcore
 
 # #SBATCH --output=log/blastx-%j.out
@@ -37,5 +37,4 @@ if [ $FILES2TRANSFER -gt 0 ] ; then
  fi
 fi
 
-blastx -task blastx -db $BLASTTMPDIR/$(basename $BLASTDB) -query $CHUNKSDIR/chunk.${SLURM_ARRAY_TASK_ID} -evalue 1e-4 -outfmt 6 | gzip > $CHUNKSDIR/chunk.${SLURM_ARRAY_TASK_ID}.blast.gz
-
+blastx -task blastx -db $BLASTTMPDIR/$(basename $BLASTDB) -query $CHUNKSDIR/chunk.${SGE_TASK_ID} -evalue 1e-4 -outfmt 6 | gzip > $CHUNKSDIR/chunk.${SGE_TASK_ID}.blast.gz
