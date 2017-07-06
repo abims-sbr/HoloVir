@@ -1,7 +1,8 @@
 
 # GENERAL
-WORKDIR=$PWD                          # default: $PWD
-WORKTMPDIR=/tmp/$(basename $WORKDIR)  # default: /tmp/$(basename $WORKDIR)
+WORKDIR="$(readlink -f $PWD)"            # default: $PWD
+#WORKTMPDIR="${WORKDIR/projet/scratch}"  # replace projet by scratch in $WORKDIR
+WORKTMPDIR="${WORKDIR/home/scratch}"  # default: /tmp/$(basename $WORKDIR)
 SCRIPTS=$PWD/scripts
 
 # DATABASES
