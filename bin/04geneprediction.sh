@@ -1,5 +1,8 @@
 #!/bin/bash
+set -e
+
 . configfile.txt
+
 GP_DATADIR=$(readlink -e $GP_DATADIR || { echo "data not found. Stop": exit 1;})
 PP_DATADIR=$(readlink -e $PP_DATADIR || { echo "read directory not found. Stop"; exit 1;})
 SCRIPTS=$(readlink -e $SCRIPTS || { echo "Scripts directory not found. Stop"; exit 1; })
